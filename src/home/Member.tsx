@@ -1,10 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import { MemberType } from './homeTypes';
 
 const Member: React.FC<MemberType> = ({ username, lastActive, msg, id }) => {
+  const navigate = useNavigate();
+
   return (
-    <li className='flex items-center text-white py-2 px-3 hover:bg-gray-700 cursor-pointer rounded-sm'>
+    <li
+      onClick={() => navigate('/p/' + id.toString())}
+      className='flex items-center text-white py-2 px-3 hover:bg-gray-700 cursor-pointer rounded-sm'
+    >
       <Avatar>LN</Avatar>
       <div className='ml-3 grow'>
         <div className='flex-between'>
