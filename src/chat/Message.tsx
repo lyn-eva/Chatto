@@ -1,17 +1,18 @@
 import React from 'react';
 import SnackBar from '@mui/material/Snackbar';
 // import { msgTypes } from './ChatTypes';
-import { MsgTypes } from './chatTypes';
+import { MsgType } from './chatTypes';
 
-interface Props extends MsgTypes {
-  isOwner: Boolean;
+interface Props extends MsgType {
+  // isOwner: Boolean;
 }
 
-const Message: React.FC<Props> = ({ isOwner, msg, sendAt }) => {
+const Message: React.FC<Props> = ({ msg, sendAt }) => {
+  // const isSender = 
   return (
     <li
       className={`${
-        isOwner ? 'self-end flex-row-reverse' : 'self-start'
+        true ? 'self-end flex-row-reverse' : 'self-start'
       } px-2 flex items-center gap-2 z-0`}
     >
       <SnackBar

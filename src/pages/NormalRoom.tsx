@@ -1,9 +1,8 @@
-import React from 'react';
 import ChatHeader from '../chat/ChatHeader';
 import Input from '../chat/Input';
 import MsgBox from '../chat/MsgBox';
 
-const PrivateChat = () => {
+const NormalRoom = (props: any) => {
   return (
     <>
       <ChatHeader />
@@ -13,4 +12,4 @@ const PrivateChat = () => {
   );
 };
 
-export default PrivateChat;
+export default NormalRoom;

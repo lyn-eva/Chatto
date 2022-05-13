@@ -1,6 +1,8 @@
-export interface MemberType {
-  username: string;
-  lastActive: string;
-  msg: string;
-  id: number;
+export interface RoomType {
+  updated: string;
+  created: string;
+  members: string[];
+  owner: string;
+  type: string;
+  id:string;
 }

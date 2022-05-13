@@ -1,9 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
-import { MemberType } from './homeTypes';
+import { RoomType } from './homeTypes';
 
-const Member: React.FC<MemberType> = ({ username, lastActive, msg, id }) => {
+interface Props extends RoomType {
+  key: string;
+}
+
+const Conversation: React.FC<Props> = ({ id }) => {
   const navigate = useNavigate();
 
   return (
@@ -14,13 +18,13 @@ const Member: React.FC<MemberType> = ({ username, lastActive, msg, id }) => {
       <Avatar>LN</Avatar>
       <div className='ml-3 grow'>
         <div className='flex-between'>
-          <h2 className='font-bold'>{username}</h2>
-          <span className='text-sm tracking-wide'>{lastActive}</span>
+          <h2 className='font-bold'>{'username'}</h2>
+          <span className='text-sm tracking-wide'>{'last active'}</span>
         </div>
-        <p className='text-gray-300 truncate w-10/12 text-[14px]'>{msg}</p>
+        <p className='text-gray-300 truncate w-10/12 text-[14px]'>{'msg'}</p>
       </div>
     </li>
   );
 };
 
-export default Member;
+export default Conversation; 

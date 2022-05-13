@@ -1,6 +1,6 @@
-export interface MsgTypes {
+export interface MsgType {
   msg: string;
-  userId: string;
-  id: number;
+  senderId: string;
+  id: string;
   sendAt: string;
 }
