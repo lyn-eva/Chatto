@@ -10,12 +10,14 @@ const PrivateChat = lazy(() => import('./pages/NormalRoom'));
 
 function App() {
   return (
-    <Routes>
-      <Route path='/p/:id' element={<PrivateChat />} />
-      <Route path='signup' element={<SignUp />} />
-      <Route path='signin' element={<SignIn />} />
-      <Route path='/' element={<Home />} />
-    </Routes>
+    <Suspense fallback={<p>loading ..</p>}>
+      <Routes>
+        <Route path='/p/:id' element={<PrivateChat />} />
+        <Route path='signup' element={<SignUp />} />
+        <Route path='signin' element={<SignIn />} />
+        <Route path='/' element={<Home />} />
+      </Routes>
+    </Suspense>
   );
 }
 

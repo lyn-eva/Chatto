@@ -2,7 +2,6 @@
 import { useCreateUserWithEmailAndPassword, useAuthState } from 'react-firebase-hooks/auth';
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-// import Link from '@mui/material/Link';
 import { auth } from '../firebaseConfig';
 import useValidate from '../custom-hooks/useValidate';
 import TextField from '@mui/material/TextField';
@@ -12,7 +11,6 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import SnackBar from '@mui/material/Snackbar';
-import Box from '@mui/material/Box';
 
 const SignUp = () => {
   const [createUserWithEmailAndPassword, user, loading, error] =
@@ -42,7 +40,6 @@ const SignUp = () => {
           <TextField
             inputRef={nameRef}
             label='username'
-            // size='small'
             error={name.invalid}
             helperText={name.err}
           />

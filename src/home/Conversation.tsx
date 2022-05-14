@@ -3,16 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import { RoomType } from './homeTypes';
 
-interface Props extends RoomType {
-  key: string;
+interface Props {
+  // ...RoomType
 }
 
-const Conversation: React.FC<Props> = ({ id }) => {
+const Conversation: React.FC<any> = ({ type }) => {
   const navigate = useNavigate();
 
   return (
     <li
-      onClick={() => navigate('/p/' + id.toString())}
+      // onClick={() => navigate('/p/' + id.toString())}
       className='flex items-center text-white py-2 px-3 hover:bg-gray-700 cursor-pointer rounded-sm'
     >
       <Avatar>LN</Avatar>
@@ -21,10 +21,10 @@ const Conversation: React.FC<Props> = ({ id }) => {
           <h2 className='font-bold'>{'username'}</h2>
           <span className='text-sm tracking-wide'>{'last active'}</span>
         </div>
-        <p className='text-gray-300 truncate w-10/12 text-[14px]'>{'msg'}</p>
+        <p className='text-gray-300 truncate w-10/12 text-[14px]'>{type}</p>
       </div>
     </li>
   );
 };
 
-export default Conversation; 
+export default Conversation;
