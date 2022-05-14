@@ -1,8 +1,10 @@
 // @ts-ignore
-import { useCreateUserWithEmailAndPassword, useAuthState } from 'react-firebase-hooks/auth';
+import {
+  useCreateUserWithEmailAndPassword,
+  useSignInWithEmailAndPassword,
+} from 'react-firebase-hooks/auth';
 import React, { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-// import Link from '@mui/material/Link';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
 import useValidate from '../custom-hooks/useValidate';
 import TextField from '@mui/material/TextField';
@@ -12,20 +14,22 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import SnackBar from '@mui/material/Snackbar';
-import Box from '@mui/material/Box';
 
-const SignUp = () => {
-  const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(auth);
-  const { isValid, name, email, pwd, nameRef, emailRef, pwdRef } = useValidate();
+const SignIn = () => {
+  // const [createUserWithEmailAndPassword, user, loading, error] =
+  //   useCreateUserWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
+  const { isValid, email, pwd, emailRef, pwdRef } = useValidate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
     if (!isValid()) return;
-    await createUserWithEmailAndPassword(
+    await signInWithEmailAndPassword(
       emailRef.current?.value ?? '',
       pwdRef.current?.value || ''
     );
+    navigate('../');
   };
 
   return (
@@ -37,15 +41,9 @@ const SignUp = () => {
             className='font-medium text-center'
             component='h2'
           >
-            Sign Up
+            Sign In
           </Typography>
-          <TextField
-            inputRef={nameRef}
-            label='username'
-            // size='small'
-            error={name.invalid}
-            helperText={name.err}
-          />
+
           <TextField
             inputRef={emailRef}
             label='email'
@@ -67,11 +65,11 @@ const SignUp = () => {
             variant='contained'
             sx={{ mt: 3 }}
           >
-            Sign Up
+            Sign In
           </Button>
         </form>
         <Link
-          to='../signin'
+          to='../signup'
           style={{
             color: '#1565c0',
             marginTop: '1rem',
@@ -81,12 +79,12 @@ const SignUp = () => {
             textDecoration: 'underline',
           }}
         >
-          Already have an Account? Sign In
+          Don't have an account? Sign Up
         </Link>
       </section>
       <Backdrop open={loading} sx={{ flexDirection: 'column' }}>
         <CircularProgress />
-        <Typography marginTop={2}>Creating your account...</Typography>
+        <Typography marginTop={2}>signing in...</Typography>
       </Backdrop>
       {error && (
         <SnackBar open={true} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
@@ -97,4 +95,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;

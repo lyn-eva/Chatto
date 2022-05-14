@@ -7,3 +7,7 @@
     @apply flex items-center justify-between;
   }
 }
+
+* {
+  font-family: 'roboto', sans-serif;
+}
