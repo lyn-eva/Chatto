@@ -1,13 +1,21 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
+import { signOutUser } from '../firebaseUtils/firebaseUtils';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import Logout from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ListItemButton from '@mui/material/ListItemButton';
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOutUser();
+    navigate('../signin');
+  };
 
   return (
     <header className='relative flex justify-between items-center px-4 py-2 bg-[#555]'>
@@ -26,11 +34,11 @@ const Header = () => {
             Profile
           </NavLink>
         </ListItem>
-        <ListItem className=' border-[#ffffff80] hover:bg-gray-600'>
-          <NavLink to='/signup' className='w-full'>
+        <ListItem sx={{p: 0}} className=' border-[#ffffff80] hover:bg-gray-600'>
+          <ListItemButton onClick={handleSignOut} component='button' sx={{py: 1.3}}>
             <Logout className='mr-5' />
             Log Out
-          </NavLink>
+          </ListItemButton>
         </ListItem>
       </ul>
     </header>

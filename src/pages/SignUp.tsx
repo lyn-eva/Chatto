@@ -1,9 +1,12 @@
-// @ts-ignore
-import { useCreateUserWithEmailAndPassword, useAuthState } from 'react-firebase-hooks/auth';
-import React, { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { auth } from '../firebaseConfig';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  useCreateUserWithEmailAndPassword,
+  useUpdateProfile,
+  setDoc,
+} from '../firebaseUtils/firebaseUtils';
 import useValidate from '../custom-hooks/useValidate';
+import { updateProfileType } from '../firebaseUtils/firebaseUtilTypes';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -11,19 +14,29 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import SnackBar from '@mui/material/Snackbar';
+import { AuthError } from 'firebase/auth';
 
 const SignUp = () => {
-  const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(auth);
+  const [err, setErr] = useState<AuthError>();
+  const { createUserWithEmailAndPassword, loading } = useCreateUserWithEmailAndPassword();
+  const { updateProfile, loading: updateLoading } = useUpdateProfile();
   const { isValid, name, email, pwd, nameRef, emailRef, pwdRef } = useValidate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
     if (!isValid()) return;
-    await createUserWithEmailAndPassword(
-      emailRef.current?.value ?? '',
-      pwdRef.current?.value || ''
-    );
+    const USERNAME = nameRef.current?.value;
+    const EMAIL = emailRef.current?.value;
+    const PWD = pwdRef.current?.value;
+    try {
+      const { user } = await createUserWithEmailAndPassword(EMAIL as string, PWD as string);
+      await updateProfile({ displayName: USERNAME } as updateProfileType);
+      await setDoc('users', user.uid, { username: USERNAME, email: EMAIL });
+      navigate('../');
+    } catch (error) {
+      setErr(error as AuthError);
+    }
   };
 
   return (
@@ -81,13 +94,13 @@ const SignUp = () => {
           Already have an Account? Sign In
         </Link>
       </section>
-      <Backdrop open={loading} sx={{ flexDirection: 'column' }}>
+      <Backdrop open={loading || updateLoading} sx={{ flexDirection: 'column' }}>
         <CircularProgress />
         <Typography marginTop={2}>Creating your account...</Typography>
       </Backdrop>
-      {error && (
+      {err && (
         <SnackBar open={true} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-          <Alert severity='error'>{error.message}</Alert>
+          <Alert severity='error'>{err.message}</Alert>
         </SnackBar>
       )}
     </main>

@@ -6,7 +6,7 @@ import Conversation from './Conversation';
 
 const Rooms: React.FC = () => {
   const { rooms } = useSelector(selectFirestore);
-
+console.log(rooms)
   return (
     <main className='pt-6'>
       {rooms.map((room) => (

@@ -1,14 +1,22 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getDoc, doc } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig';
+import { useUserData } from '../custom-hooks/useUserData';
 import Avatar from '@mui/material/Avatar';
 import { RoomType } from './homeTypes';
 
 interface Props {
   // ...RoomType
+  type: string;
+  members: string[];
+  other: string;
 }
 
-const Conversation: React.FC<any> = ({ type }) => {
+const Conversation: React.FC<Props> = ({ type, members, other }) => {
   const navigate = useNavigate();
+
+  const user = useUserData(other);
 
   return (
     <li
@@ -18,7 +26,7 @@ const Conversation: React.FC<any> = ({ type }) => {
       <Avatar>LN</Avatar>
       <div className='ml-3 grow'>
         <div className='flex-between'>
-          <h2 className='font-bold'>{'username'}</h2>
+          <h2 className='font-bold'>{user?.username}</h2>
           <span className='text-sm tracking-wide'>{'last active'}</span>
         </div>
         <p className='text-gray-300 truncate w-10/12 text-[14px]'>{type}</p>

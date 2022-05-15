@@ -2,8 +2,9 @@ import { FieldValue, WhereFilterOp } from 'firebase/firestore';
 
 export interface roomType {
   created: FieldValue;
-  members: { owner_id: string; user_id: string };
+  members: string [];
   owner: string;
+  other: string;
   type: string;
   updated: FieldValue;
   id: string;
