@@ -1,7 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import React from 'react';
-import './App.css';
+import ListenAuthChange from './hoc/ListenAuthChange';
 
 const Home = lazy(() => import('./pages/Home'));
 const SignUp = lazy(() => import('./pages/SignUp'));
@@ -10,14 +9,16 @@ const PrivateChat = lazy(() => import('./pages/NormalRoom'));
 
 function App() {
   return (
-    <Suspense fallback={<p>loading ..</p>}>
-      <Routes>
-        <Route path='/p/:id' element={<PrivateChat />} />
-        <Route path='signup' element={<SignUp />} />
-        <Route path='signin' element={<SignIn />} />
-        <Route path='/' element={<Home />} />
-      </Routes>
-    </Suspense>
+    <ListenAuthChange>
+      <Suspense fallback={<p>loading ..</p>}>
+        <Routes>
+          <Route path='/p/:id' element={<PrivateChat />} />
+          <Route path='signup' element={<SignUp />} />
+          <Route path='signin' element={<SignIn />} />
+          <Route path='/' element={<Home />} />
+        </Routes>
+      </Suspense>
+    </ListenAuthChange>
   );
 }
 

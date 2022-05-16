@@ -1,9 +1,5 @@
-// @ts-ignore
-import {
-  useCreateUserWithEmailAndPassword,
-  useSignInWithEmailAndPassword,
-} from 'react-firebase-hooks/auth';
 import React, { useRef, useState } from 'react';
+import useSignInWithEmailAndPassword from '../custom-hooks/useSignInWithEmailAndPassword';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
 import useValidate from '../custom-hooks/useValidate';
@@ -14,22 +10,23 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import SnackBar from '@mui/material/Snackbar';
+import { AuthError } from 'firebase/auth';
 
 const SignIn = () => {
-  // const [createUserWithEmailAndPassword, user, loading, error] =
-  //   useCreateUserWithEmailAndPassword(auth);
-  const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
+  const [err, setErr] = useState<AuthError>();
+  const { signInWithEmailAndPassword, loading } = useSignInWithEmailAndPassword();
   const { isValid, email, pwd, emailRef, pwdRef } = useValidate();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
     if (!isValid()) return;
-    await signInWithEmailAndPassword(
-      emailRef.current?.value ?? '',
-      pwdRef.current?.value || ''
-    );
-    navigate('../');
+    try {
+      await signInWithEmailAndPassword(emailRef.current?.value ?? '', pwdRef.current?.value || '');
+      navigate('../');
+    } catch (err) {
+      setErr(err as AuthError);
+    }
   };
 
   return (
@@ -86,9 +83,9 @@ const SignIn = () => {
         <CircularProgress />
         <Typography marginTop={2}>signing in...</Typography>
       </Backdrop>
-      {error && (
+      {err && (
         <SnackBar open={true} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-          <Alert severity='error'>{error.message}</Alert>
+          <Alert severity='error'>{err.message}</Alert>
         </SnackBar>
       )}
     </main>

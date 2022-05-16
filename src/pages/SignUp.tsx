@@ -33,7 +33,7 @@ const SignUp = () => {
       const { user } = await createUserWithEmailAndPassword(EMAIL as string, PWD as string);
       await updateProfile({ displayName: USERNAME } as updateProfileType);
       await setDoc('users', user.uid, { username: USERNAME, email: EMAIL });
-      navigate('../');
+      // navigate('../');
     } catch (error) {
       setErr(error as AuthError);
     }

@@ -25,7 +25,7 @@ const Header = () => {
       </IconButton>
       <ul
         className={`${
-          open ? 'opacity-100' : 'opacity-0'
+          open ? 'opacity-100' : 'opacity-0 pointer-events-none'
         } duration-500 absolute right-3 overflow-hidden rounded-[5px] top-[4.5rem] w-48 bg-[#222] shadow-md text-white`}
       >
         <ListItem className='border-b border-[#ffffff80] hover:bg-gray-600'>

@@ -1,22 +1,26 @@
-import React from 'react';
+import { useSelector } from 'react-redux';
+import { selectAuth } from '../features/auth/authSlice';
 import Header from '../home/Header';
 import Rooms from '../home/Rooms';
-import useSyncWithFirestore from '../hoc/useSyncWithFirestore';
-import { roomConfigType } from '../features/firestore/firestoreTypes';
-
-const roomsConfig: roomConfigType = {
-  path: 'rooms',
-  where: ['members', 'array-contains', 'owner_id'],
-  orderBy: 'updated',
-};
+import RoomOptions from '../home/RoomOptions';
+import SyncRooms from '../hoc/SyncRooms';
+import { syncRoomOptionType } from '../features/firestore/firestoreTypes';
 
 const Home = () => {
-  const SyncedRooms = useSyncWithFirestore(Rooms, roomsConfig);
+  const { user } = useSelector(selectAuth);
+  const roomsConfig: syncRoomOptionType = {
+    path: 'rooms',
+    where: ['members', 'array-contains', user.uid],
+    orderBy: 'updated',
+  };
 
   return (
     <>
       <Header />
-      <SyncedRooms />
+      <RoomOptions />
+      <SyncRooms options={roomsConfig}>
+        <Rooms />
+      </SyncRooms>
     </>
   );
 };

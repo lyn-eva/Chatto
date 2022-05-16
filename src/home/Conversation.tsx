@@ -1,26 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getDoc, doc } from 'firebase/firestore';
-import { auth, db } from '../firebaseConfig';
 import { useUserData } from '../custom-hooks/useUserData';
 import Avatar from '@mui/material/Avatar';
 import { RoomType } from './homeTypes';
+import useSyncWithFirebase from '../hoc/SyncRooms';
 
 interface Props {
   // ...RoomType
   type: string;
   members: string[];
   other: string;
+  id: string;
 }
 
-const Conversation: React.FC<Props> = ({ type, members, other }) => {
-  const navigate = useNavigate();
 
+const Conversation: React.FC<Props> = ({ type, members, other, id }) => {
+  const navigate = useNavigate();
   const user = useUserData(other);
 
   return (
     <li
-      // onClick={() => navigate('/p/' + id.toString())}
+      onClick={() => navigate('/p/' + id.toString())}
       className='flex items-center text-white py-2 px-3 hover:bg-gray-700 cursor-pointer rounded-sm'
     >
       <Avatar>LN</Avatar>
