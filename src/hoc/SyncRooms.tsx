@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { onSnapshot, collection, query, orderBy, where, WhereFilterOp } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
-import { syncRooms } from '../features/firestore/firestoreSlice';
+import { syncRooms } from '../features/rooms/roomSlice';
 import { db } from '../firebaseConfig';
-import { syncRoomOptionType } from '../features/firestore/firestoreTypes';
+import { syncRoomOptionType } from '../features/rooms/roomTypes';
 
 interface Props {
   children: React.ReactElement;

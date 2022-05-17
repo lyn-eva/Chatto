@@ -26,7 +26,7 @@ const Header = () => {
       <ul
         className={`${
           open ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        } duration-500 absolute right-3 overflow-hidden rounded-[5px] top-[4.5rem] w-48 bg-[#222] shadow-md text-white`}
+        } duration-500 absolute right-3 overflow-hidden rounded-[5px] top-[4.5rem] w-48 bg-[#222] shadow-md text-white z-10`}
       >
         <ListItem className='border-b border-[#ffffff80] hover:bg-gray-600'>
           <NavLink to='/' className='w-full'>
@@ -34,8 +34,8 @@ const Header = () => {
             Profile
           </NavLink>
         </ListItem>
-        <ListItem sx={{p: 0}} className=' border-[#ffffff80] hover:bg-gray-600'>
-          <ListItemButton onClick={handleSignOut} component='button' sx={{py: 1.3}}>
+        <ListItem sx={{ p: 0 }} className=' border-[#ffffff80] hover:bg-gray-600'>
+          <ListItemButton onClick={handleSignOut} component='button' sx={{ py: 1.3 }}>
             <Logout className='mr-5' />
             Log Out
           </ListItemButton>

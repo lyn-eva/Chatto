@@ -1,25 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { selectFirestore } from '../features/firestore/firestoreSlice';
+import { selectRooms } from '../features/rooms/roomSlice';
 import { RoomType } from './homeTypes';
 import Conversation from './Conversation';
 import SyncConversation from '../hoc/SyncConversation';
 
 const Rooms: React.FC = () => {
-  const { rooms } = useSelector(selectFirestore);
+  const { rooms } = useSelector(selectRooms);
 
   return (
-    <main className='pt-6'>
-      {rooms.map((room) => (<Conversation {...room}/>
-        // <SyncConversation
-        //   options={{
-        //     orderBy: 'updated',
-        //     roomId: room.id,
-        //   }}
-        // >
-        //   <Conversation {...room} />
-        // </SyncConversation>
-      ))} 
+    <main>
+      {rooms.map((room) => (
+        <SyncConversation
+          key={room.id}
+          options={{
+            orderBy: 'sentAt',
+            roomId: room.id,
+          }}
+        >
+          <Conversation {...room} />
+        </SyncConversation>
+      ))}
     </main>
   );
 };

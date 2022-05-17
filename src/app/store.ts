@@ -1,12 +1,15 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
-import firestoreReducer from '../features/firestore/firestoreSlice';
+import roomReducer from '../features/rooms/roomSlice';
+import converastionReducer from '../features/conversations/conversationSlice';
 
 export const store = configureStore({
   reducer: {
     user: authReducer,
-    firestore: firestoreReducer,
+    rooms: roomReducer,
+    conversations: converastionReducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 
 export type AppDispatch = typeof store.dispatch;

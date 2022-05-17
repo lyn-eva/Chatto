@@ -2,9 +2,9 @@ import { useSelector } from 'react-redux';
 import { selectAuth } from '../features/auth/authSlice';
 import Header from '../home/Header';
 import Rooms from '../home/Rooms';
-import RoomOptions from '../home/RoomOptions';
+import RoomOptions from '../home/AddRoom';
 import SyncRooms from '../hoc/SyncRooms';
-import { syncRoomOptionType } from '../features/firestore/firestoreTypes';
+import { syncRoomOptionType } from '../features/rooms/roomTypes';
 
 const Home = () => {
   const { user } = useSelector(selectAuth);

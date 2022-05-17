@@ -2,7 +2,7 @@ import ChatHeader from '../chat/ChatHeader';
 import Input from '../chat/Input';
 import MsgBox from '../chat/MsgBox';
 
-const NormalRoom = (props: any) => {
+const NormalRoom = () => {
   return (
     <>
       <ChatHeader />
