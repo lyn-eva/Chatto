@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 
 const ChatHeader = () => {
   return (
-    <header className='flex justify-between items-center px-4 py-2 bg-[#555]'>
+    <header className='flex justify-between items-center px-4 py-2 bg-[#555] fixed top-0 w-full'>
       <button>
         <Avatar className='w-10 h-10 bg-green-400'> L</Avatar>
       </button>

@@ -1,9 +1,13 @@
 import { useEffect } from 'react';
 import { onSnapshot, collection, query, orderBy, where, WhereFilterOp } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
-import { syncConversations } from '../features/conversations/conversationSlice';
+import { syncConversations } from '../features/conversationSlice';
 import { db } from '../firebaseConfig';
-import { syncConversationOptionType } from '../features/rooms/roomTypes';
+
+export interface syncConversationOptionType {
+  orderBy: string;
+  roomId: string;
+}
 
 interface Props {
   children: React.ReactElement;

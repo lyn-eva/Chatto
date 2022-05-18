@@ -1,6 +1,6 @@
-import { RootState } from '../../app/store';
+import { RootState } from '../app/store';
 import { createSlice } from '@reduxjs/toolkit';
-import { auth } from '../../firebaseConfig';
+import { auth } from '../firebaseConfig';
 import { User } from 'firebase/auth';
 
 const authSlice = createSlice({

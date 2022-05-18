@@ -1,13 +1,15 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
-import { roomType } from './roomTypes';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
+import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../app/store';
+import { FieldValue } from 'firebase/firestore';
 
-export interface createRoomAsyncType {
+export interface roomType {
+  created: { seconds: string; nanoseconds: string };
+  members: string[];
   owner: string;
   other: string;
-  type: 'person' | 'group';
+  type: string;
+  updated: { seconds: string; nanoseconds: string };
+  id: string;
 }
 
 const roomSlice = createSlice({
