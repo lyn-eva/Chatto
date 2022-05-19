@@ -1,8 +1,15 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../features/authSlice';
-import { MsgType } from './chatTypes';
 import { milliToHHMM } from '../datetime';
+
+export interface MsgType {
+  msg: string;
+  owner: string;
+  id: string;
+  sentAt: string;
+} 
+
 
 const Message: React.FC<MsgType> = ({ msg, sentAt, owner }) => {
   const { user } = useSelector(selectAuth);
@@ -12,7 +19,7 @@ const Message: React.FC<MsgType> = ({ msg, sentAt, owner }) => {
       <li
         className={`${
           isSender ? 'self-end flex-row-reverse' : 'self-start'
-        } px-2 flex items-center gap-2 z-0 w-full`}
+        } px-2 flex items-center gap-2 -z-10 w-full`}
       >
         <div
           style={{

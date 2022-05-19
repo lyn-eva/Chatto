@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useUserData } from '../custom-hooks/useUserData';
@@ -8,13 +8,13 @@ import { roomType } from '../features/roomSlice';
 import { milliToHHMM } from '../datetime';
 import Avatar from '@mui/material/Avatar';
 
-const Conversation: React.FC<roomType> = ({ id, other, owner, type, updated }) => {
+const Conversation: React.FC<roomType> = ({ id, other, owner, updated }) => {
   const navigate = useNavigate();
   const { user } = useSelector(selectAuth);
-  const OTHER = useUserData(other === user.uid ? owner : other);
-  // console.log(OTHER);
-  // const { conversations } = useSelector(selectConversations) as Conversations;
-
+  const OTHER = useUserData(other === user?.uid ? owner : other);
+  const { conversations } = useSelector(selectConversations) as Conversations;
+  const roomMsgs = conversations?.[id];
+console.log(milliToHHMM(updated?.seconds))
   return (
     <li
       onClick={() => navigate('/p/' + id)}
@@ -28,7 +28,7 @@ const Conversation: React.FC<roomType> = ({ id, other, owner, type, updated }) =
             {milliToHHMM(updated?.seconds)}
           </span>
         </div>
-        <p className='text-gray-300 truncate w-10/12 text-[14px]'>{type}</p>
+        <p className='text-gray-300 truncate w-10/12 text-[14px]'>{roomMsgs?.[roomMsgs.length -1]?.msg}</p>
       </div>
     </li>
   );

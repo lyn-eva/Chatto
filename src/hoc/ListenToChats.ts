@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { onSnapshot, collection, query, orderBy, where, WhereFilterOp } from 'firebase/firestore';
+import { onSnapshot, collection, query, orderBy, where } from 'firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuth } from '../features/authSlice';
 import { syncRooms } from '../features/roomSlice';
@@ -37,6 +37,8 @@ const ListenToChats: React.FC<Props> = ({ children }) => {
       dispatch(syncRooms(rooms));
       rooms.forEach((room) => listeners.push(listenToConversations(room.id, dispatch)));
     });
+
+    // updateLastActive(user.uid as string);
 
     return () => {
       unsub();

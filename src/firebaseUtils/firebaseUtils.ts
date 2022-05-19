@@ -1,14 +1,40 @@
-import { setDoc as setDOC, getDocs as getDOCS, collection, doc, query } from 'firebase/firestore';
-import { signOut as signOUT, User } from 'firebase/auth';
+import {
+  setDoc as setDOC,
+  getDocs as getDOCS,
+  collection,
+  doc,
+  query,
+  deleteDoc,
+  writeBatch,
+  arrayRemove,
+  arrayUnion,
+  updateDoc,
+  serverTimestamp,
+} from 'firebase/firestore';
+import { signOut as signOUT } from 'firebase/auth';
 import { db, auth } from '../firebaseConfig';
-
+console.log(auth);
 export const setDoc = async (path: string, id: string, data: {}) => setDOC(doc(db, path, id), data);
 
 export const getDocs = async (path: string) => getDOCS(collection(db, path));
 
-export const getUserByEmailOrId = async (path: string) => getDOCS(collection(db, path))
+export const getUserByEmailOrId = async (path: string) => getDOCS(collection(db, path));
 
 export const signOutUser = async () => signOUT(auth);
+
+export const updateLastActive = async (uid: string) =>
+  setDOC(doc(db, 'users', uid), { lastActive: serverTimestamp() }, { merge: true });
+
+export const updateUserRooms = async (type: 'add' | 'remove', userId: string, roomId: string) =>
+  deleteDoc(doc(db, 'users', userId, 'rooms', roomId));
+
+export const deleteRoom = async (id: string) => {
+  const batch = writeBatch(db);
+  batch.delete(doc(db, 'rooms', id));
+  const messages = await getDOCS(collection(db, 'rooms', id, 'conversations'));
+  messages.docs.forEach((msg) => batch.delete(doc(db, 'rooms', id, 'conversations', msg.id)));
+  return batch.commit();
+};
 
 export { default as useCreateUserWithEmailAndPassword } from '../custom-hooks/useCreateUserWithEmailAndPassword';
 export { default as useUpdateProfile } from '../custom-hooks/useUpdateProfile';

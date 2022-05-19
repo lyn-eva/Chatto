@@ -3,10 +3,11 @@ import {
   doc,
   getDoc,
   addDoc,
-  updateDoc,
+  setDoc,
   collection,
   serverTimestamp,
   arrayUnion,
+  updateDoc,
 } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../features/authSlice';
@@ -40,7 +41,6 @@ const AddRoom = () => {
     setOther(data.exists() ? ({ id: data.id, ...data.data() } as userType) : undefined);
     setConnections(currentUserData.data()?.connections);
   };
-  // console.log(userRooms);
 
   const handleCreateRoom = async () => {
     setActive((prev) => !prev);
@@ -53,10 +53,21 @@ const AddRoom = () => {
       created: serverTimestamp(),
       updated: serverTimestamp(),
     };
+    const { id } = await addDoc(collection(db, 'rooms'), data);
+
     await Promise.all([
-      addDoc(collection(db, 'rooms'), data),
-      updateDoc(doc(db, 'users', USER.uid), {connections: arrayUnion(other.id)}),
-      updateDoc(doc(db, 'users', other.id), { connections: arrayUnion(USER.uid) }),
+      setDoc(
+        doc(db, 'users', USER.uid, 'rooms', id),
+        { lastActive: serverTimestamp() },
+        { merge: true }
+      ),
+      setDoc(
+        doc(db, 'users', other.id, 'rooms', id),
+        { lastActive: serverTimestamp() },
+        { merge: true }
+      ),
+      setDoc(doc(db, 'users', USER.uid), { connections: arrayUnion(other.id) }, { merge: true }),
+      setDoc(doc(db, 'users', other.id), { connections: arrayUnion(USER.uid) }, { merge: true }),
     ]);
   };
 
@@ -97,8 +108,11 @@ const AddRoom = () => {
             <h2 className='font-bold grow ml-3'>{other.username}</h2>
             {connections?.includes(other.id) ? (
               <p>
-                <CheckIcon sx={{ color: '#0f0' }} />
-                added
+                <CheckIcon sx={{ color: '#0f0' }} /> added
+              </p>
+            ) : USER?.uid === other.id ? (
+              <p>
+                <CheckIcon sx={{ color: '#0f0' }} /> you
               </p>
             ) : (
               <Button onClick={handleCreateRoom} variant='contained' className='bg-[#1976d2]'>
