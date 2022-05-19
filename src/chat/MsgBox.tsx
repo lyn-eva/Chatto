@@ -15,7 +15,7 @@ const MsgBox = () => {
   }, [conversations]);
 
   return (
-    <main className='h-[calc(100vh-8rem)] mt-16 overflow-scroll py-8'>
+    <main className='h-[calc(100vh-8rem)] mt-16 overflow-y-auto py-8'>
       <ul className='flex flex-col justify-end gap-3'>
         {conversations?.[id as string].map((msg: MsgType) => (
           <Message {...msg} key={msg.id} />

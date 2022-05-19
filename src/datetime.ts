@@ -3,6 +3,7 @@ export const milliToHHMM = (second: string) => {
   const date = new Date(+second * 1000);
   const hr = date.getHours();
   const min = date.getMinutes().toString();
+  if (!hr || !min) return '';
   if (hr > 12) {
     return (hr % 12) + ':' + min.padStart(2, '0') + ' PM';
   }

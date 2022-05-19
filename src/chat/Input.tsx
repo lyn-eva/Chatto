@@ -11,6 +11,7 @@ import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfi
 import Paper from '@mui/material/Paper';
 
 const Input = () => {
+  const [height, setHeight] = useState<string>('auto');
   const [value, setValue] = useState<string>('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { user } = useSelector(selectAuth);
@@ -22,12 +23,14 @@ const Input = () => {
 
   const handleKeyDown = async (e: any) => {
     if (e.shiftKey && e.key === 'Enter') {
+      setHeight('auto')
       return autosize.update(inputRef.current);
     }
 
     if (e.key === 'Enter') {
       const msg = { msg: value.trim(), owner: user.uid, sentAt: serverTimestamp() };
       setValue('');
+      setHeight('33px');
       await Promise.all([
         addDoc(collection(db, `rooms/${id}/conversations`), msg),
         updateDoc(doc(db, 'rooms/' + id), { updated: serverTimestamp() }),
@@ -39,7 +42,7 @@ const Input = () => {
     <section className='fixed bottom-4 right-0 w-full px-2 z-50'>
       <Paper component='form' sx={{ display: 'flex', bgcolor: '#0a1929', alignItems: 'center' }}>
         <textarea
-          rows={1}
+          rows={2}
           value={value}
           ref={inputRef}
           onKeyDown={handleKeyDown}
