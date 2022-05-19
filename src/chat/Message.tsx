@@ -1,32 +1,32 @@
 import React from 'react';
-import SnackBar from '@mui/material/Snackbar';
-// import { msgTypes } from './ChatTypes';
+import { useSelector } from 'react-redux';
+import { selectAuth } from '../features/authSlice';
 import { MsgType } from './chatTypes';
+import { milliToHHMM } from '../datetime';
 
-interface Props extends MsgType {
-  // isOwner: Boolean;
-}
+const Message: React.FC<MsgType> = ({ msg, sentAt, owner }) => {
+  const { user } = useSelector(selectAuth);
+  const isSender = user.uid === owner;
 
-const Message: React.FC<Props> = ({ msg, sendAt }) => {
-  // const isSender = 
   return (
-    <li
-      className={`${
-        true ? 'self-end flex-row-reverse' : 'self-start'
-      } px-2 flex items-center gap-2 z-0`}
-    >
-      <SnackBar
-        sx={{
-          position: 'static',
-          bgcolor: '#222',
-          borderRadius: '3px',
-          div: { boxShadow: 'none', bgcolor: 'transparent' },
-        }}
-        open
-        message={msg}
-      />
-      <span className='text-gray-500 text-[13px]'>{sendAt}</span>
-    </li>
+      <li
+        className={`${
+          isSender ? 'self-end flex-row-reverse' : 'self-start'
+        } px-2 flex items-center gap-2 z-0 w-full`}
+      >
+        <div
+          style={{
+            position: 'static',
+            backgroundColor: '#222',
+            borderRadius: '3px',
+            color: '#fff',
+            padding: '12px',
+          }}
+        >
+          {msg}
+        </div>
+        <span className='text-gray-500 text-[13px]'>{milliToHHMM(sentAt)}</span>
+      </li>
   );
 };
 

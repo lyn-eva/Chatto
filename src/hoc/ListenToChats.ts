@@ -24,7 +24,7 @@ const ListenToChats: React.FC<Props> = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!user.uid) return;
+    if (!user?.uid) return;
     const listeners: any = [];
     const q = query(
       collection(db, 'rooms'),

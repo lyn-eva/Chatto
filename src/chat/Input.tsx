@@ -11,7 +11,6 @@ import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfi
 import Paper from '@mui/material/Paper';
 
 const Input = () => {
-  const [height, setHeight] = useState<string>('auto');
   const [value, setValue] = useState<string>('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { user } = useSelector(selectAuth);
@@ -23,14 +22,13 @@ const Input = () => {
 
   const handleKeyDown = async (e: any) => {
     if (e.shiftKey && e.key === 'Enter') {
-      setHeight('auto')
       return autosize.update(inputRef.current);
     }
 
     if (e.key === 'Enter') {
       const msg = { msg: value.trim(), owner: user.uid, sentAt: serverTimestamp() };
       setValue('');
-      setHeight('33px');
+      if (!value.trim()) return;
       await Promise.all([
         addDoc(collection(db, `rooms/${id}/conversations`), msg),
         updateDoc(doc(db, 'rooms/' + id), { updated: serverTimestamp() }),

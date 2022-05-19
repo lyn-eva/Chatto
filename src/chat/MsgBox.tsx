@@ -9,7 +9,7 @@ const MsgBox = () => {
   const { id } = useParams();
   const { conversations } = useSelector(selectConversations);
   const dummy = useRef<HTMLDivElement>(null);
-
+  
   useEffect(() => {
     dummy.current?.scrollIntoView();
   }, [conversations]);

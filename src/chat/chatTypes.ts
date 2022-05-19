@@ -1,6 +1,6 @@
 export interface MsgType {
   msg: string;
-  senderId: string;
+  owner: string;
   id: string;
-  sendAt: string;
-}
+  sentAt: string;
+} 
