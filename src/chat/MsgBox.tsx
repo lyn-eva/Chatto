@@ -14,7 +14,6 @@ const MsgBox: React.FC<Props> = () => {
   const { conversations } = useSelector(selectConversations);
   const dummy = useRef<HTMLDivElement>(null);
   const messages = conversations?.[id as string];
-  console.log('firsmt', messages)
 
   useEffect(() => {
     dummy.current?.scrollIntoView();

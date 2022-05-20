@@ -38,9 +38,9 @@ const Input: React.FC<Props> = () => {
       await Promise.all([
         addDoc(collection(db, `rooms/${id}/conversations`), msg),
         updateDoc(doc(db, 'rooms', id as string), { updated: serverTimestamp() }),
-        updateDoc(doc(db, 'users', user.uid as string, 'rooms', id as string), {
-          lastActive: serverTimestamp(),
-        }),
+        // updateDoc(doc(db, 'users', user.uid as string, 'rooms', id as string), {
+        //   lastActive: serverTimestamp(),
+        // }),
       ]);
     }
   };

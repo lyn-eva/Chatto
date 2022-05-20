@@ -2,38 +2,38 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../features/authSlice';
 import { milliToHHMM } from '../datetime';
+import { FieldValue } from 'firebase/firestore';
 
 export interface MsgType {
   msg: string;
   owner: string;
   id: string;
-  sentAt: string;
-} 
-
+  sentAt: { nanoseconds: string; seconds: string };
+}
 
 const Message: React.FC<MsgType> = ({ msg, sentAt, owner }) => {
   const { user } = useSelector(selectAuth);
   const isSender = user.uid === owner;
 
   return (
-      <li
-        className={`${
-          isSender ? 'self-end flex-row-reverse' : 'self-start'
-        } px-2 flex items-center gap-2 -z-10 w-full`}
+    <li
+      className={`${
+        isSender ? 'self-end flex-row-reverse' : 'self-start'
+      } px-2 flex items-center gap-2 -z-10 w-full`}
+    >
+      <div
+        style={{
+          position: 'static',
+          backgroundColor: '#222',
+          borderRadius: '3px',
+          color: '#fff',
+          padding: '12px',
+        }}
       >
-        <div
-          style={{
-            position: 'static',
-            backgroundColor: '#222',
-            borderRadius: '3px',
-            color: '#fff',
-            padding: '12px',
-          }}
-        >
-          {msg}
-        </div>
-        <span className='text-gray-500 text-[13px]'>{milliToHHMM(sentAt)}</span>
-      </li>
+        {msg}
+      </div>
+      <span className='text-gray-500 text-[13px]'>{milliToHHMM(sentAt?.seconds)}</span>
+    </li>
   );
 };
 

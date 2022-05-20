@@ -14,7 +14,6 @@ const useGetUserByEmailOrId = (q: string) => {
   useEffect(() => {
     const tmp = async () => {
       const data = await getDoc(doc(db, 'users', q));
-      console.log(data)
       setUser(data.exists() ? { id: data.id, ...data.data() } as userType : null);
     };
     tmp();

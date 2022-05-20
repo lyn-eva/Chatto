@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore';
 import { signOut as signOUT } from 'firebase/auth';
 import { db, auth } from '../firebaseConfig';
-console.log(auth);
+
 export const setDoc = async (path: string, id: string, data: {}) => setDOC(doc(db, path, id), data);
 
 export const getDocs = async (path: string) => getDOCS(collection(db, path));
@@ -27,6 +27,11 @@ export const updateLastActive = async (uid: string) =>
 
 export const updateUserRooms = async (type: 'add' | 'remove', userId: string, roomId: string) =>
   deleteDoc(doc(db, 'users', userId, 'rooms', roomId));
+
+export const updateUserRoomLastActive = async (roomId: string) =>
+  updateDoc(doc(db, 'users', auth.currentUser?.uid as string, 'rooms', roomId), {
+    lastActive: serverTimestamp(),
+  });
 
 export const deleteRoom = async (id: string) => {
   const batch = writeBatch(db);

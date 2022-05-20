@@ -27,8 +27,6 @@ const ChatHeader: React.FC<Props> = ({ room }) => {
   const OTHER = useUserData(user.uid === room?.other ? room?.owner : room?.other);
   const [active, setActive] = useState<boolean>(false);
 
-  console.log(OTHER, room, user);
-
   const handleDelete = async () => {
     if (!OTHER) return;
     setActive(false);
