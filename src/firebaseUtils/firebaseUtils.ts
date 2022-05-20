@@ -33,6 +33,11 @@ export const updateUserRoomLastActive = async (roomId: string) =>
     lastActive: serverTimestamp(),
   });
 
+export const updateLastActivePerson = async (roomId: string) =>
+  updateDoc(doc(db, 'rooms', roomId), {
+    lastActivePerson: auth.currentUser?.uid,
+  });
+
 export const deleteRoom = async (id: string) => {
   const batch = writeBatch(db);
   batch.delete(doc(db, 'rooms', id));

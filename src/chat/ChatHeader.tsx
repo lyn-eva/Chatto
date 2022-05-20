@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { roomType } from '../features/roomSlice';
 import { selectAuth } from '../features/authSlice';
+import { selectRooms } from '../features/roomSlice';
 import { updateDoc, doc, arrayRemove } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { deleteRoom, updateUserRooms } from '../firebaseUtils/firebaseUtils';
@@ -20,10 +21,12 @@ interface Props {
   room: roomType;
 }
 
-const ChatHeader: React.FC<Props> = ({ room }) => {
+const ChatHeader: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useSelector(selectAuth);
+  const { rooms } = useSelector(selectRooms);
+  const room = rooms.filter(({ id: ID }) => ID === id)[0];
   const OTHER = useUserData(user.uid === room?.other ? room?.owner : room?.other);
   const [active, setActive] = useState<boolean>(false);
 

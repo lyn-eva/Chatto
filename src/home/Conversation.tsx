@@ -19,8 +19,7 @@ const Conversation: React.FC<roomType> = ({ id, other, owner, updated }) => {
   const { user } = useSelector(selectAuth);
   const OTHER = useUserData(other === user?.uid ? owner : other);
   const { conversations } = useSelector(selectConversations) as Conversations;
-  const roomMsgs = conversations?.[id];
-  // const notifications =
+
 
   useEffect(() => {
     if (!user || !conversations) return;
@@ -50,7 +49,7 @@ const Conversation: React.FC<roomType> = ({ id, other, owner, updated }) => {
         </div>
         <div className='flex-between'>
           <p className='text-gray-300 truncate w-10/12 text-[14px]'>
-            {roomMsgs?.[roomMsgs.length - 1]?.msg}
+            {conversations?.[id][0]?.msg}
           </p>
           <Badge
             badgeContent={notifications}

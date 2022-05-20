@@ -1,6 +1,6 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { updateUserRoomLastActive } from './firebaseUtils/firebaseUtils';
+import { updateUserRoomLastActive, updateLastActivePerson } from './firebaseUtils/firebaseUtils';
 import ListenAuthChange from './hoc/ListenAuthChange';
 import ListenToChats from './hoc/ListenToChats';
 
@@ -10,12 +10,15 @@ const SignIn = lazy(() => import('./pages/SignIn'));
 const NormalRoom = lazy(() => import('./pages/NormalRoom'));
 
 function App() {
+  const [prevRoomId, setPrevRoomId] = useState<string>();
+
   const location = useLocation();
   useEffect(() => {
-    if (!location.pathname.startsWith('/p/')) return;
     const roomId = location.pathname.match(/(?<=^\/p\/).+/g)?.[0];
-    (async () => await updateUserRoomLastActive(roomId as string))();
-  }, [location]);
+    if (!roomId && !prevRoomId) return;
+    if (location.pathname.startsWith('/p/')) setPrevRoomId(roomId);
+    (async () => await updateUserRoomLastActive(roomId ?? prevRoomId as string))();
+  }, [location, prevRoomId]);
 
   return (
     <ListenAuthChange>

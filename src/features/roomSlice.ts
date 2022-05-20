@@ -10,6 +10,7 @@ export interface roomType {
   type: string;
   updated: { seconds: string; nanoseconds: string };
   id: string;
+  lastActivePerson: string
 }
 
 const roomSlice = createSlice({

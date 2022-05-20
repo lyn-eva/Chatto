@@ -11,7 +11,7 @@ interface Props {
 }
 
 const listenToConversations = (id: string, dispatch: any) => {
-  const q = query(collection(db, 'rooms', id, 'conversations'), orderBy('sentAt'));
+  const q = query(collection(db, 'rooms', id, 'conversations'), orderBy('sentAt', 'desc'));
   let conversations = [];
   return onSnapshot(q, (snapshot) => {
     conversations = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
