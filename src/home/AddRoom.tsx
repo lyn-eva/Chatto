@@ -56,18 +56,10 @@ const AddRoom = () => {
     const { id } = await addDoc(collection(db, 'rooms'), data);
 
     await Promise.all([
-      setDoc(
-        doc(db, 'users', USER.uid, 'rooms', id),
-        { lastActive: serverTimestamp() },
-        { merge: true }
-      ),
-      setDoc(
-        doc(db, 'users', other.id, 'rooms', id),
-        { lastActive: serverTimestamp() },
-        { merge: true }
-      ),
       setDoc(doc(db, 'users', USER.uid), { connections: arrayUnion(other.id) }, { merge: true }),
       setDoc(doc(db, 'users', other.id), { connections: arrayUnion(USER.uid) }, { merge: true }),
+      setDoc(doc(db, 'users', USER.uid), { rooms: arrayUnion(id) }, { merge: true }),
+      setDoc(doc(db, 'users', other.id), { rooms: arrayUnion(id) }, { merge: true }),
     ]);
   };
 

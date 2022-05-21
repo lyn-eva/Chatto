@@ -28,21 +28,30 @@ export const updateLastActive = async (uid: string) =>
 export const updateUserRooms = async (type: 'add' | 'remove', userId: string, roomId: string) =>
   deleteDoc(doc(db, 'users', userId, 'rooms', roomId));
 
-export const updateUserRoomLastActive = async (roomId: string) =>
-  updateDoc(doc(db, 'users', auth.currentUser?.uid as string, 'rooms', roomId), {
-    lastActive: serverTimestamp(),
-  });
+// export const updateUserRoomLastActive = async (roomId: string) =>
+//   updateDoc(doc(db, 'users', auth.currentUser?.uid as string, 'rooms', roomId), {
+//     lastActive: serverTimestamp(),
+//   });
 
-export const updateLastActivePerson = async (roomId: string) =>
-  updateDoc(doc(db, 'rooms', roomId), {
-    lastActivePerson: auth.currentUser?.uid,
+// export const updateLastActivePerson = async (roomId: string) =>
+//   updateDoc(doc(db, 'rooms', roomId), {
+//     lastActivePerson: auth.currentUser?.uid,
+//   });
+
+export const updateMember = async (roomId: string) =>
+  updateDoc(doc(db, 'rooms', roomId, 'members', auth.currentUser?.uid as string), {
+    lastActive: serverTimestamp(),
   });
 
 export const deleteRoom = async (id: string) => {
   const batch = writeBatch(db);
   batch.delete(doc(db, 'rooms', id));
-  const messages = await getDOCS(collection(db, 'rooms', id, 'conversations'));
+  const [messages, members] = await Promise.all([
+    getDOCS(collection(db, 'rooms', id, 'conversations')),
+    getDOCS(collection(db, 'rooms', id, 'members')),
+  ]);
   messages.docs.forEach((msg) => batch.delete(doc(db, 'rooms', id, 'conversations', msg.id)));
+  members.docs.forEach((member) => batch.delete(doc(db, 'rooms', id, 'members', member.id)));
   return batch.commit();
 };
 

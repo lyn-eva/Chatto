@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useUserData } from '../custom-hooks/useUserData';
-import { selectConversations, Conversations } from '../features/conversationSlice';
+import { selectConversations, ConversationsType, ConversationType } from '../features/conversationSlice';
 import { selectAuth } from '../features/authSlice';
 import { roomType } from '../features/roomSlice';
 import { milliToHHMM } from '../datetime';
@@ -18,8 +18,7 @@ const Conversation: React.FC<roomType> = ({ id, other, owner, updated }) => {
   const navigate = useNavigate();
   const { user } = useSelector(selectAuth);
   const OTHER = useUserData(other === user?.uid ? owner : other);
-  const { conversations } = useSelector(selectConversations) as Conversations;
-
+  const { conversations } = useSelector(selectConversations) as ConversationsType;
 
   useEffect(() => {
     if (!user || !conversations) return;
@@ -27,7 +26,7 @@ const Conversation: React.FC<roomType> = ({ id, other, owner, updated }) => {
       const data = await getDoc(doc(db, 'users', user.uid, 'rooms', id));
       const lastActive = data.data()?.lastActive;
       const noti = conversations[id]?.filter(
-        (MSG: MsgType) => MSG.sentAt.seconds > lastActive.seconds && MSG.owner !== user.uid
+        (MSG: MsgType) => MSG.sentAt.seconds > lastActive?.seconds && MSG.owner !== user.uid
       ).length;
       setNotifications(noti);
     };

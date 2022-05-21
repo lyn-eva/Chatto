@@ -1,30 +1,24 @@
 import { useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectRooms } from '../features/roomSlice';
-import { selectAuth } from '../features/authSlice';
+// import { selectRooms } from '../features/roomSlice';
+// import { selectAuth } from '../features/authSlice';
 import { selectConversations } from '../features/conversationSlice';
 import Message, { MsgType } from './Message';
-import { roomType } from '../features/roomSlice';
-import { updateLastActivePerson, updateUserRoomLastActive } from '../firebaseUtils/firebaseUtils';
-
-// interface Props {
-//   room: roomType;
-// }
+// import { roomType } from '../features/roomSlice';
+import { updateMember } from '../firebaseUtils/firebaseUtils';
 
 const MsgBox: React.FC = () => {
   const { id } = useParams();
   const { conversations } = useSelector(selectConversations);
-  const { user } = useSelector(selectAuth);
-  // const { rooms } = useSelector(selectRooms);
-  // const room = rooms.filter(({ id: ID }) => ID === id)[0];
+  // const { user } = useSelector(selectAuth);
   const dummy = useRef<HTMLDivElement>(null);
   const messages = conversations?.[id as string];
 
   useEffect(() => {
     dummy.current?.scrollIntoView();
     if (!id) return;
-    (async () => await updateLastActivePerson(id))();
+    (async () => await updateMember(id))();
   }, [conversations, id]);
 
   return (

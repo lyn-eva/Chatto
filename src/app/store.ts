@@ -1,12 +1,14 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import authReducer from '../features/authSlice';
 import roomReducer from '../features/roomSlice';
+import memberReducer from '../features/memberSlice';
 import converastionReducer from '../features/conversationSlice';
 
 export const store = configureStore({
   reducer: {
     user: authReducer,
     rooms: roomReducer,
+    members: memberReducer,
     conversations: converastionReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),

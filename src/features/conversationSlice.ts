@@ -1,22 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../app/store';
-import { FieldValue } from 'firebase/firestore';
 
-export interface conversationType {
-  [key: string]: any;
+export interface ConversationType {
   id: string;
   msg: string;
   senderId: string;
-  updated: FieldValue;
+  updated: { nanoseconds: string; seconds: string };
 }
 
-export interface Conversations {
-  [key: string]: conversationType;
+export interface ConversationsType {
+  [key: string]: ConversationType[];
 }
 
 const conversationSlice = createSlice({
   name: 'conversation',
-  initialState: {} as Conversations,
+  initialState: {} as ConversationsType,
   reducers: {
     syncConversations: (state, action) => {
       state.conversations = {

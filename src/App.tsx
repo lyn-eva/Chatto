@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { updateUserRoomLastActive, updateLastActivePerson } from './firebaseUtils/firebaseUtils';
+import { updateMember} from './firebaseUtils/firebaseUtils';
 import ListenAuthChange from './hoc/ListenAuthChange';
 import ListenToChats from './hoc/ListenToChats';
 
@@ -17,7 +17,7 @@ function App() {
     const roomId = location.pathname.match(/(?<=^\/p\/).+/g)?.[0];
     if (!roomId && !prevRoomId) return;
     if (location.pathname.startsWith('/p/')) setPrevRoomId(roomId);
-    (async () => await updateUserRoomLastActive(roomId ?? prevRoomId as string))();
+    (async () => await updateMember(roomId ?? prevRoomId as string))();
   }, [location, prevRoomId]);
 
   return (
