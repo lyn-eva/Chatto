@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { updateProfile as UP, User } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
-import { updateProfileType } from '../firebaseUtils/firebaseUtilTypes';
+import { updateProfileType } from '../firebaseUtils/firebaseUtils';
 
 export default function useUpdateProfile() {
   const [loading, setLoading] = useState<boolean>(false);

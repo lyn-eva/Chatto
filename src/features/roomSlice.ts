@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../app/store';
-import { FieldValue } from 'firebase/firestore';
 
 export interface roomType {
   created: { seconds: string; nanoseconds: string };

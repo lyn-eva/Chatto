@@ -1,4 +1,4 @@
-import { useState, useReducer, useRef } from 'react';
+import { useState, useRef } from 'react';
 
 interface ValidTypes {
   invalid: boolean | undefined;

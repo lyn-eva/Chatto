@@ -6,15 +6,9 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../features/authSlice';
 import { db } from '../firebaseConfig';
-// import { useUserData } from '../custom-hooks/useUserData';
 import IconButton from '@mui/material/IconButton';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 import Paper from '@mui/material/Paper';
-import { roomType } from '../features/roomSlice';
-
-interface Props {
-  room: roomType;
-}
 
 const Input: React.FC = () => {
   const [value, setValue] = useState<string>('');

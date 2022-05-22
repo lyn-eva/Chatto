@@ -14,7 +14,6 @@ const memberSlice = createSlice({
   initialState: {} as MembersType,
   reducers: {
     syncMembers: (state, action) => {
-      console.log(action);
       state.members = {
         ...state.members,
         [action.payload.id]: action.payload.value,
@@ -23,6 +22,6 @@ const memberSlice = createSlice({
   },
 });
 
-export const selectConversations = (state: RootState) => state.members;
+export const selectMembers = (state: RootState) => state.members;
 export const { syncMembers } = memberSlice.actions;
 export default memberSlice.reducer;

@@ -7,7 +7,6 @@ import {
   collection,
   serverTimestamp,
   arrayUnion,
-  updateDoc,
 } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../features/authSlice';
@@ -17,6 +16,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
 import CheckIcon from '@mui/icons-material/Check';
+import { updateUserRooms } from '../firebaseUtils/firebaseUtils';
 
 interface userType {
   id: string;
@@ -53,13 +53,11 @@ const AddRoom = () => {
       created: serverTimestamp(),
       updated: serverTimestamp(),
     };
-    const { id } = await addDoc(collection(db, 'rooms'), data);
+    const { id: roomId } = await addDoc(collection(db, 'rooms'), data);
 
     await Promise.all([
-      setDoc(doc(db, 'users', USER.uid), { connections: arrayUnion(other.id) }, { merge: true }),
-      setDoc(doc(db, 'users', other.id), { connections: arrayUnion(USER.uid) }, { merge: true }),
-      setDoc(doc(db, 'users', USER.uid), { rooms: arrayUnion(id) }, { merge: true }),
-      setDoc(doc(db, 'users', other.id), { rooms: arrayUnion(id) }, { merge: true }),
+      updateUserRooms('ADD', USER.uid, other.id, roomId),
+      updateUserRooms('ADD', other.id, USER.uid, roomId)
     ]);
   };
 

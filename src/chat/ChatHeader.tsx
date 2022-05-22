@@ -17,28 +17,22 @@ import { milliToHHMM } from '../datetime';
 import { useUserData } from '../custom-hooks/useUserData';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-interface Props {
-  room: roomType;
-}
-
 const ChatHeader: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useSelector(selectAuth);
   const { rooms } = useSelector(selectRooms);
   const room = rooms.filter(({ id: ID }) => ID === id)[0];
-  const OTHER = useUserData(user.uid === room?.other ? room?.owner : room?.other);
+  const other = useUserData(user.uid === room?.other ? room?.owner : room?.other);
   const [active, setActive] = useState<boolean>(false);
 
   const handleDelete = async () => {
-    if (!OTHER) return;
+    if (!other) return;
     setActive(false);
     await Promise.all([
+      updateUserRooms('REMOVE', user.uid, other.id, room.id),
+      updateUserRooms('REMOVE', other.id, user.uid, room.id),
       deleteRoom(id as string),
-      updateUserRooms('remove', user.uid, room.id),
-      updateUserRooms('remove', OTHER?.id as string, room.id),
-      updateDoc(doc(db, 'users', user.uid), { connections: arrayRemove(OTHER?.id) }),
-      updateDoc(doc(db, 'users', OTHER?.uid as string), { connections: arrayRemove(user.uid) }),
     ]);
     navigate('../');
   };
@@ -49,7 +43,7 @@ const ChatHeader: React.FC = () => {
         <Avatar className='w-10 h-10 bg-green-400'> L</Avatar>
       </button>
       <div className='ml-5 grow text-white'>
-        <h2 className='font-bold leading-4'>{OTHER?.username}</h2>
+        <h2 className='font-bold leading-4'>{other?.username}</h2>
         <span className='text-sm tracking-wide text-gray-300 block min-h-[16.8px]'>
           {milliToHHMM(room?.updated?.seconds)}
         </span>

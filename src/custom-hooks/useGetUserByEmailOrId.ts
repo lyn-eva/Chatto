@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getDoc, doc, query, where } from 'firebase/firestore';
+import { getDoc, doc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
 interface userType {

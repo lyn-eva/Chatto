@@ -6,7 +6,7 @@ import {
   setDoc,
 } from '../firebaseUtils/firebaseUtils';
 import useValidate from '../custom-hooks/useValidate';
-import { updateProfileType } from '../firebaseUtils/firebaseUtilTypes';
+import { updateProfileType } from '../firebaseUtils/firebaseUtils';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';

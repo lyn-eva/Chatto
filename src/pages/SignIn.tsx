@@ -1,7 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import useSignInWithEmailAndPassword from '../custom-hooks/useSignInWithEmailAndPassword';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../firebaseConfig';
 import useValidate from '../custom-hooks/useValidate';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';

@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../features/authSlice';
 import { milliToHHMM } from '../datetime';
-import { FieldValue } from 'firebase/firestore';
 
 export interface MsgType {
   msg: string;

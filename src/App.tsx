@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { updateMember} from './firebaseUtils/firebaseUtils';
+import { updateMember } from './firebaseUtils/firebaseUtils';
 import ListenAuthChange from './hoc/ListenAuthChange';
 import ListenToChats from './hoc/ListenToChats';
 
@@ -10,14 +10,20 @@ const SignIn = lazy(() => import('./pages/SignIn'));
 const NormalRoom = lazy(() => import('./pages/NormalRoom'));
 
 function App() {
-  const [prevRoomId, setPrevRoomId] = useState<string>();
+  const [prevRoomId, setPrevRoomId] = useState<string>('');
 
   const location = useLocation();
   useEffect(() => {
+    // update user's room active status after leaving the room
     const roomId = location.pathname.match(/(?<=^\/p\/).+/g)?.[0];
-    if (!roomId && !prevRoomId) return;
-    if (location.pathname.startsWith('/p/')) setPrevRoomId(roomId);
-    (async () => await updateMember(roomId ?? prevRoomId as string))();
+    if (roomId && !prevRoomId) setPrevRoomId(roomId as string);
+
+    return () => { 
+      if (!prevRoomId) return;
+      setPrevRoomId('');
+      // callback can't be a promise, so IIFE
+      (async () => await updateMember(prevRoomId as string))();
+    };
   }, [location, prevRoomId]);
 
   return (

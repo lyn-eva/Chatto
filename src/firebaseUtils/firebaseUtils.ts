@@ -3,16 +3,19 @@ import {
   getDocs as getDOCS,
   collection,
   doc,
-  query,
   deleteDoc,
   writeBatch,
-  arrayRemove,
-  arrayUnion,
   updateDoc,
   serverTimestamp,
+  arrayRemove,
+  arrayUnion,
 } from 'firebase/firestore';
 import { signOut as signOUT } from 'firebase/auth';
 import { db, auth } from '../firebaseConfig';
+
+export interface updateProfileType {
+  displayName: string;
+}
 
 export const setDoc = async (path: string, id: string, data: {}) => setDOC(doc(db, path, id), data);
 
@@ -25,23 +28,26 @@ export const signOutUser = async () => signOUT(auth);
 export const updateLastActive = async (uid: string) =>
   setDOC(doc(db, 'users', uid), { lastActive: serverTimestamp() }, { merge: true });
 
-export const updateUserRooms = async (type: 'add' | 'remove', userId: string, roomId: string) =>
-  deleteDoc(doc(db, 'users', userId, 'rooms', roomId));
+export const updateUserRooms = async (type: 'ADD' | 'REMOVE', uid: string, otherId: string, roomId: string) => {
+  return type === 'ADD'
+    ? Promise.all([
+        setDOC(doc(db, 'users', uid as string), { rooms: arrayUnion(roomId) }, { merge: true }),
+        setDOC(doc(db, 'users', uid as string), { connections: arrayUnion(otherId) }, { merge: true }),
+      ])
+    : Promise.all([
+      deleteDoc(doc(db, 'users', uid, 'rooms', roomId)),
+      deleteDoc(doc(db, 'users', uid, 'rooms', roomId)),
+    ]);
+};
 
-// export const updateUserRoomLastActive = async (roomId: string) =>
-//   updateDoc(doc(db, 'users', auth.currentUser?.uid as string, 'rooms', roomId), {
-//     lastActive: serverTimestamp(),
-//   });
-
-// export const updateLastActivePerson = async (roomId: string) =>
-//   updateDoc(doc(db, 'rooms', roomId), {
-//     lastActivePerson: auth.currentUser?.uid,
-//   });
-
-export const updateMember = async (roomId: string) =>
-  updateDoc(doc(db, 'rooms', roomId, 'members', auth.currentUser?.uid as string), {
-    lastActive: serverTimestamp(),
-  });
+export const updateMember = async (roomId: string) => {
+  if (!auth.currentUser) return;
+  setDOC(
+    doc(db, 'rooms', roomId, 'members', auth.currentUser.uid),
+    { lastActive: serverTimestamp() },
+    { merge: true }
+  );
+};
 
 export const deleteRoom = async (id: string) => {
   const batch = writeBatch(db);

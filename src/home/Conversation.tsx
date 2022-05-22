@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useUserData } from '../custom-hooks/useUserData';
-import { selectConversations, ConversationsType, ConversationType } from '../features/conversationSlice';
+import {
+  selectConversations,
+  ConversationsType,
+} from '../features/conversationSlice';
 import { selectAuth } from '../features/authSlice';
 import { roomType } from '../features/roomSlice';
 import { milliToHHMM } from '../datetime';
@@ -13,7 +16,6 @@ import { getDoc, doc } from 'firebase/firestore';
 import Badge from '@mui/material/Badge';
 
 const Conversation: React.FC<roomType> = ({ id, other, owner, updated }) => {
-  // const [lastActive, setLastActive] = useState<FieldValue>();
   const [notifications, setNotifications] = useState<number>();
   const navigate = useNavigate();
   const { user } = useSelector(selectAuth);
@@ -22,15 +24,14 @@ const Conversation: React.FC<roomType> = ({ id, other, owner, updated }) => {
 
   useEffect(() => {
     if (!user || !conversations) return;
-    const tmp = async () => {
-      const data = await getDoc(doc(db, 'users', user.uid, 'rooms', id));
+    (async () => {
+      const data = await getDoc(doc(db, 'rooms', id, 'members', user.uid));
       const lastActive = data.data()?.lastActive;
       const noti = conversations[id]?.filter(
         (MSG: MsgType) => MSG.sentAt.seconds > lastActive?.seconds && MSG.owner !== user.uid
       ).length;
       setNotifications(noti);
-    };
-    tmp();
+    })();
   }, [id, user, conversations]);
 
   return (
@@ -48,7 +49,7 @@ const Conversation: React.FC<roomType> = ({ id, other, owner, updated }) => {
         </div>
         <div className='flex-between'>
           <p className='text-gray-300 truncate w-10/12 text-[14px]'>
-            {conversations?.[id][0]?.msg}
+            {conversations?.[id]?.[0]?.msg}
           </p>
           <Badge
             badgeContent={notifications}

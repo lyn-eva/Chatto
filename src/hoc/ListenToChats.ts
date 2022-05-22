@@ -21,11 +21,10 @@ const listenToConversations = (id: string, dispatch: any) => {
 };
 
 const listenToMembers = (id: string, dispatch: any) => {
-  const q = query(collection(db, 'rooms', id, 'members'));
+  const q = query(collection(db, 'rooms', id, 'members'), orderBy('lastActive', 'desc'));
   let members = [];
   return onSnapshot(q, (snapshot) => {
     members = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    console.log('room count', members)
     dispatch(syncMembers({ id: id, value: members }));
   });
 };
@@ -40,7 +39,7 @@ const ListenToChats: React.FC<Props> = ({ children }) => {
     const q = query(
       collection(db, 'rooms'),
       where('members', 'array-contains', user.uid),
-      orderBy('updated')
+      orderBy('updated', 'desc')
     );
 
     const unsub = onSnapshot(q, (snapshot) => {
