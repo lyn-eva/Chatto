@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getDoc, doc } from 'firebase/firestore';
-import { auth, db } from '../firebaseConfig';
+import { db } from '../firebaseConfig';
 
 interface userDataType {
   id: string;

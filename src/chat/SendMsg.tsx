@@ -1,20 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 // @ts-ignore
 import autosize from 'autosize';
-import { addDoc, collection, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../features/authSlice';
-import { db } from '../firebaseConfig';
 import IconButton from '@mui/material/IconButton';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 import Paper from '@mui/material/Paper';
+import { sendMsg } from '../firebaseUtils/firebaseUtils';
 
 const Input: React.FC = () => {
   const [value, setValue] = useState<string>('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { user } = useSelector(selectAuth);
-  const { id } = useParams();
+  const { id: roomId } = useParams();
 
   useEffect(() => {
     autosize(inputRef.current);
@@ -24,16 +23,10 @@ const Input: React.FC = () => {
     if (e.shiftKey && e.key === 'Enter') {
       return autosize.update(inputRef.current);
     }
-
-    if (e.key === 'Enter') {
-      const msg = { msg: value.trim(), owner: user.uid, sentAt: serverTimestamp() };
-      setValue('');
-      if (!value.trim()) return;
-      await Promise.all([
-        addDoc(collection(db, `rooms/${id}/conversations`), msg),
-        updateDoc(doc(db, 'rooms', id as string), { updated: serverTimestamp() }),
-      ]);
-    }
+    //send message
+    if (e.key !== 'Enter' || !roomId || !value.trim()) return;
+    setValue('');
+    await sendMsg(roomId, { msg: value.trim(), owner: user.uid });
   };
 
   return (

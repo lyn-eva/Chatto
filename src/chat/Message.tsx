@@ -6,7 +6,7 @@ import { milliToHHMM } from '../datetime';
 export interface MsgType {
   msg: string;
   owner: string;
-  id: string;
+  id?: string;
   sentAt: { nanoseconds: string; seconds: string };
 }
 

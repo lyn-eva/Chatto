@@ -1,22 +1,12 @@
 import { useRef, useState } from 'react';
-import {
-  doc,
-  getDoc,
-  addDoc,
-  setDoc,
-  collection,
-  serverTimestamp,
-  arrayUnion,
-} from 'firebase/firestore';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../features/authSlice';
-import { db } from '../firebaseConfig';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
 import CheckIcon from '@mui/icons-material/Check';
-import { updateUserRooms } from '../firebaseUtils/firebaseUtils';
+import { createRoom, searchUser, updateUserRooms } from '../firebaseUtils/firebaseUtils';
 
 interface userType {
   id: string;
@@ -25,7 +15,7 @@ interface userType {
 }
 
 const AddRoom = () => {
-  const [other, setOther] = useState<userType | null>();
+  const [result, setResult] = useState<userType | null>();
   const [connections, setConnections] = useState<string[] | null>();
   const [active, setActive] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,31 +23,24 @@ const AddRoom = () => {
 
   const handleSearch = async () => {
     setActive((prev) => !prev);
-    if (active) return;
-    const [data, currentUserData] = await Promise.all([
-      getDoc(doc(db, 'users', inputRef.current?.value ?? '')),
-      getDoc(doc(db, 'users', USER.uid)),
-    ]);
-    setOther(data.exists() ? ({ id: data.id, ...data.data() } as userType) : undefined);
+    if (active || !inputRef.current) return;
+    const [data, currentUserData] = await searchUser(inputRef.current.value);
+    setResult(data.exists() ? ({ id: data.id, ...data.data() } as userType) : undefined);
     setConnections(currentUserData.data()?.connections);
   };
 
   const handleCreateRoom = async () => {
     setActive((prev) => !prev);
-    if (!other) return;
-    const data = {
-      other: other.id,
+    if (!result) return;
+    const { id: roomId } = await createRoom({
+      other: result.id,
       owner: USER.uid,
-      type: 'person',
-      members: [other.id, USER.uid],
-      created: serverTimestamp(),
-      updated: serverTimestamp(),
-    };
-    const { id: roomId } = await addDoc(collection(db, 'rooms'), data);
+      members: [result.id, USER.uid],
+    });
 
     await Promise.all([
-      updateUserRooms('ADD', USER.uid, other.id, roomId),
-      updateUserRooms('ADD', other.id, USER.uid, roomId)
+      updateUserRooms('ADD', USER.uid, result.id, roomId),
+      updateUserRooms('ADD', result.id, USER.uid, roomId),
     ]);
   };
 
@@ -92,15 +75,15 @@ const AddRoom = () => {
           transform: active ? 'scaleY(1)' : 'scaleY(0)',
         }}
       >
-        {other ? (
+        {result ? (
           <li className='flex items-center text-[#374151] py-1 px-3 cursor-pointer'>
-            <Avatar>{other.username[0].toUpperCase()}</Avatar>
-            <h2 className='font-bold grow ml-3'>{other.username}</h2>
-            {connections?.includes(other.id) ? (
+            <Avatar>{result.username[0].toUpperCase()}</Avatar>
+            <h2 className='font-bold grow ml-3'>{result.username}</h2>
+            {connections?.includes(result.id) ? (
               <p>
                 <CheckIcon sx={{ color: '#0f0' }} /> added
               </p>
-            ) : USER?.uid === other.id ? (
+            ) : USER?.uid === result.id ? (
               <p>
                 <CheckIcon sx={{ color: '#0f0' }} /> you
               </p>

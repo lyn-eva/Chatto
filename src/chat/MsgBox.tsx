@@ -25,7 +25,7 @@ const MsgBox: React.FC = () => {
   return (
     <main id='msgbox' className='h-[calc(99vh-9rem)] mt-16 overflow-y-auto pt-8'>
       {messages?.length === 0 && <p className='text-center text-gray-200 text-lg'>say Hi 👋 </p>}
-      {messages && messages.length > 0 && (
+      {messages && !!messages.length && (
         <ul className='flex flex-col-reverse justify-end gap-4'>
           <div ref={dummy}></div>
           {roomMembers?.[0]?.id !== user.uid && messages[0].owner === user.uid && (
