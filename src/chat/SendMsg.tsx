@@ -30,7 +30,7 @@ const Input: React.FC = () => {
   };
 
   return (
-    <section className='fixed bottom-4 right-0 w-full px-2 z-50'>
+    <section className='fixed bottom-4 px-2 z-50 mx-auto w-[min(90%,900px)]'>
       <Paper component='form' sx={{ display: 'flex', bgcolor: '#0a1929', alignItems: 'center' }}>
         <textarea
           rows={1}

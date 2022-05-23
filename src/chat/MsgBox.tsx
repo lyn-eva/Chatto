@@ -23,7 +23,7 @@ const MsgBox: React.FC = () => {
   }, [conversations, id]);
 
   return (
-    <main id='msgbox' className='h-[calc(99vh-9rem)] mt-16 overflow-y-auto pt-8'>
+    <div id='msgbox' className='h-[calc(99vh-9rem)] mt-16 overflow-y-auto pt-8'>
       {messages?.length === 0 && <p className='text-center text-gray-200 text-lg'>say Hi 👋 </p>}
       {messages && !!messages.length && (
         <ul className='flex flex-col-reverse justify-end gap-4'>
@@ -40,7 +40,7 @@ const MsgBox: React.FC = () => {
           ))}
         </ul>
       )}
-    </main>
+    </div>
   );
 };
 

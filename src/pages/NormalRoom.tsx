@@ -4,9 +4,11 @@ import MsgBox from '../chat/MsgBox';
 const NormalRoom = () => {
   return (
     <>
-      <ChatHeader/>
-      <MsgBox/>
-      <SendMsg/>
+      <ChatHeader />
+      <main className='mx-auto w-[min(90%,900px)]'>
+        <MsgBox />
+        <SendMsg />
+      </main>
     </>
   );
 };

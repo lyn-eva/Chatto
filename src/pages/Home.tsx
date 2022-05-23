@@ -6,8 +6,10 @@ const Home = () => {
   return (
     <>
       <Header />
-      <AddRoom />
-      <Rooms />
+      <main className='mx-auto w-[min(90%,900px)]'>
+        <AddRoom />
+        <Rooms />
+      </main>
     </>
   );
 };

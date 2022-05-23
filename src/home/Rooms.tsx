@@ -6,11 +6,11 @@ const Rooms: React.FC = () => {
   const { rooms } = useSelector(selectRooms);
 
   return (
-    <main>
+    <div>
       {rooms.map((room) => (
         <Conversation key={room.id} {...room} />
       ))}
-    </main>
+    </div>
   );
 };
 
