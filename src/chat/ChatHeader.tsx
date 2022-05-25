@@ -43,7 +43,7 @@ const ChatHeader: React.FC = () => {
         <Avatar className='w-10 h-10 bg-green-400'> L</Avatar>
       </button>
       <div className='ml-5 grow text-white'>
-        <h2 className='font-bold leading-4 mb-1'>{other?.username}</h2>
+        <h2 className='font-bold leading-4 mb-1'>{other?.displayName}</h2>
         <span className='text-sm tracking-wide text-gray-300 block min-h-[16.8px]'>
           {milliToHHMM(room?.updated?.seconds)}
         </span>

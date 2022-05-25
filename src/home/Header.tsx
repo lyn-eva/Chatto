@@ -1,5 +1,7 @@
 import { useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectAuth } from '../features/authSlice';
 import { signOutUser } from '../firebaseUtils/firebaseUtils';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
@@ -32,6 +34,7 @@ const reducer = ({ navOn, profileOn }: Active, action: Action) => {
 
 const Header = () => {
   const [{ navOn, profileOn }, dispatch] = useReducer(reducer, { navOn: false, profileOn: false });
+  const { user } = useSelector(selectAuth);
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -40,10 +43,12 @@ const Header = () => {
   };
 
   return (
-    <header className='relative flex justify-between items-center px-4 py-2 bg-[#555]'>
+    <header className='relative flex justify-between items-center px-4 py-1 bg-[#555]'>
       <h1 className='font-open-sans font-bold text-orange-500 text-lg'>Chatto</h1>
       <IconButton onClick={() => dispatch({ type: 'NAV' })}>
-        <Avatar className='w-8 h-8 bg-green-400'> L</Avatar>
+        <Avatar className='bg-green-400 text-2xl w-12 h-12'>
+          {user && user.photoURL ? <img className='w-full' alt='tme' src={user.photoURL}></img> : 'l'}
+        </Avatar>
       </IconButton>
       <ul
         className={`${

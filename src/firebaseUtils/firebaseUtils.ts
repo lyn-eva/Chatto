@@ -17,7 +17,9 @@ import { signOut as signOUT } from 'firebase/auth';
 import { db, auth } from '../firebaseConfig';
 
 export interface updateProfileType {
-  displayName: string;
+  displayName?: string;
+  photoURL?: string;
+  email?: string;
 }
 
 interface sendMsgType {
@@ -31,16 +33,15 @@ interface createRoomType {
   members: string[];
 }
 
-export const setDoc = async (path: string, id: string, data: {}) => setDOC(doc(db, path, id), data);
+export const createUserDb = async (id: string, data: updateProfileType) =>
+  setDOC(doc(db, 'users', id), data);
 
-export const getDocs = async (path: string) => getDOCS(collection(db, path));
-
-export const getUserByEmailOrId = async (path: string) => getDOCS(collection(db, path));
+export const updateUserDb = async (data: updateProfileType) => {
+  if (!auth.currentUser) return;
+  setDOC(doc(db, 'users', auth.currentUser.uid), data, { merge: true });
+};
 
 export const signOutUser = async () => signOUT(auth);
-
-export const updateLastActive = async (uid: string) =>
-  setDOC(doc(db, 'users', uid), { lastActive: serverTimestamp() }, { merge: true });
 
 export const searchUser = async (query: string) => {
   if (!auth.currentUser) return [];
@@ -55,11 +56,15 @@ export const updateUserRooms = async (
   uid: string,
   otherId: string,
   roomId: string
-) =>  
+) =>
   type === 'ADD'
     ? Promise.all([
         setDOC(doc(db, 'users', uid as string), { rooms: arrayUnion(roomId) }, { merge: true }),
-        setDOC(doc(db, 'users', uid as string), { connections: arrayUnion(otherId) }, { merge: true }),
+        setDOC(
+          doc(db, 'users', uid as string),
+          { connections: arrayUnion(otherId) },
+          { merge: true }
+        ),
       ])
     : Promise.all([
         deleteDoc(doc(db, 'users', uid, 'rooms', roomId)),
@@ -72,7 +77,7 @@ export const createRoom = async (room: createRoomType) => {
     created: serverTimestamp(),
     updated: serverTimestamp(),
   });
-}
+};
 
 export const updateMember = async (roomId: string) => {
   if (!auth.currentUser) return;
@@ -80,9 +85,9 @@ export const updateMember = async (roomId: string) => {
     doc(db, 'rooms', roomId, 'members', auth.currentUser.uid),
     { lastActive: serverTimestamp() },
     { merge: true }
-    );
-  };
-  
+  );
+};
+
 export const sendMsg = async (roomId: string, msg: sendMsgType) => {
   return await Promise.all([
     addDoc(collection(db, `rooms/${roomId}/conversations`), { ...msg, sentAt: serverTimestamp() }),

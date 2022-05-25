@@ -1,16 +1,39 @@
+import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../features/authSlice';
+import { milliToDate } from '../datetime';
+import { useUpdateProfile, updateUserDb } from '../firebaseUtils/firebaseUtils';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
+import { UserMetadata } from 'firebase/auth';
 
 type Props = { active: boolean };
 
-const Profile: React.FC<Props> = ({ active }) => {
-  const { user } = useSelector(selectAuth);
-  console.log(user);
+interface metadata extends UserMetadata {
+  createdAt: string;
+}
 
+const Profile: React.FC<Props> = ({ active }) => {
+  const { updateProfile, loading } = useUpdateProfile();
+  const { user } = useSelector(selectAuth);
+
+  const metadata = user?.metadata as metadata;
+  const urlRef = useRef<HTMLInputElement | null>(null);
+  const nameRef = useRef<HTMLInputElement | null>(null);
+
+  const handleUpdateProfile = async () => {
+    if (!urlRef.current || !nameRef.current) return;
+    const data = {
+      displayName: nameRef.current.value.trim() || user.displayName || '',
+      photoURL: urlRef.current.value.trim() || user.photoURL || '',
+    };
+    urlRef.current.value = '';
+    nameRef.current.value = '';
+    await Promise.all([updateProfile(data), updateUserDb(data)]);
+  };
+  
   return (
     <div
       className={`${
@@ -22,20 +45,17 @@ const Profile: React.FC<Props> = ({ active }) => {
       <div className='flex-between'>
         <IconButton className='w-[40%] aspect-square'>
           <Avatar className='w-full h-full bg-green-400 text-5xl p-0'>
-            <img
-              className='w-full'
-              alt='tme'
-              src='https://cdn.discordapp.com/avatars/900400541899825202/4f4fa7b29d2f6174f60de35fd1ade6a0.webp?size=100'
-            ></img>
+            {user && user.photoURL ? <img className='w-full' alt='tme' src={user.photoURL}></img> : 'l'}
           </Avatar>
         </IconButton>
-        <div className='mr-3'>
+        <div className='mr-3 text-right'>
           <h1 className='mb-3'>
-            <span className='text-gray-200'>username: </span>
-            {user.displayName}
+            <span className='text-gray-200'>displayName: </span>
+            {user?.displayName}
           </h1>
           <p>
-            <span className='text-gray-200'>joined:</span> 12/23/2022
+            <span className='text-gray-200'>joined: </span>
+            {milliToDate(metadata?.createdAt)}
           </p>
         </div>
       </div>
@@ -45,6 +65,7 @@ const Profile: React.FC<Props> = ({ active }) => {
             <EditIcon className='text-white' />
           </IconButton>
           <input
+            ref={urlRef}
             className='grow px-2 rounded-sm outline-none text-black'
             type='text'
             placeholder='profile photo link'
@@ -55,9 +76,10 @@ const Profile: React.FC<Props> = ({ active }) => {
             <EditIcon className='text-white' />
           </IconButton>
           <input
+            ref={nameRef}
             className='grow px-2 rounded-sm outline-none text-black'
             type='text'
-            placeholder='username'
+            placeholder='displayName'
           />
         </div>
       </div>
@@ -67,7 +89,12 @@ const Profile: React.FC<Props> = ({ active }) => {
         <hr className='h-[1px] grow mx-2 border-gray-400' />
       </div>
       <div>
-        <Button fullWidth variant='contained' className='bg-blue-500 hover:bg-blue-700 mb-2'>
+        <Button
+          onClick={handleUpdateProfile}
+          fullWidth
+          variant='contained'
+          className='bg-blue-500 hover:bg-blue-700 mb-2'
+        >
           update
         </Button>
         <Button fullWidth variant='contained' className='bg-red-600 hover:bg-red-700'>

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   useCreateUserWithEmailAndPassword,
   useUpdateProfile,
-  setDoc,
+  createUserDb
 } from '../firebaseUtils/firebaseUtils';
 import useValidate from '../custom-hooks/useValidate';
 import { updateProfileType } from '../firebaseUtils/firebaseUtils';
@@ -26,13 +26,15 @@ const SignUp = () => {
   const handleSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
     if (!isValid()) return;
-    const USERNAME = nameRef.current?.value;
+    const displayName = nameRef.current?.value;
     const EMAIL = emailRef.current?.value;
     const PWD = pwdRef.current?.value;
+    if (!displayName || !EMAIL || !PWD) return;
+
     try {
       const { user } = await createUserWithEmailAndPassword(EMAIL as string, PWD as string);
-      await updateProfile({ displayName: USERNAME } as updateProfileType);
-      await setDoc('users', user.uid, { username: USERNAME, email: EMAIL });
+      await updateProfile({ displayName: displayName } as updateProfileType);
+      await createUserDb(user.uid, { displayName: displayName, email: EMAIL });
       navigate('../');
     } catch (error) {
       setErr(error as AuthError);
@@ -52,7 +54,7 @@ const SignUp = () => {
           </Typography>
           <TextField
             inputRef={nameRef}
-            label='username'
+            label='displayName'
             error={name.invalid}
             helperText={name.err}
           />

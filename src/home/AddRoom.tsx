@@ -10,7 +10,7 @@ import { createRoom, searchUser, updateUserRooms } from '../firebaseUtils/fireba
 
 interface userType {
   id: string;
-  username: string;
+  displayName: string;
   email: string;
 }
 
@@ -77,8 +77,8 @@ const AddRoom = () => {
       >
         {result ? (
           <li className='flex items-center text-[#374151] py-1 px-3 cursor-pointer'>
-            <Avatar>{result.username[0].toUpperCase()}</Avatar>
-            <h2 className='font-bold grow ml-3'>{result.username}</h2>
+            <Avatar>{result.displayName[0].toUpperCase()}</Avatar>
+            <h2 className='font-bold grow ml-3'>{result.displayName}</h2>
             {connections?.includes(result.id) ? (
               <p>
                 <CheckIcon sx={{ color: '#0f0' }} /> added
