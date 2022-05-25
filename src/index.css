@@ -13,12 +13,12 @@
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
-#msgbox::-webkit-scrollbar {
+#msgbox::-webkit-scrollbar, #emoji-ctr section::-webkit-scrollbar, body::-webkit-scrollbar {
   display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
-#msgbox {
+#msgbox, #emoji-ctr {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }

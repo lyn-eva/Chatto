@@ -31,8 +31,6 @@ const Conversation: React.FC<roomType> = ({ id, other, owner, updated }) => {
     })();
   }, [id, user, conversations]);
 
-console.log(OTHER);
-
   return (
     <li
       onClick={() => navigate('/p/' + id)}

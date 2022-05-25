@@ -3,6 +3,8 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { updateMember } from './firebaseUtils/firebaseUtils';
 import ListenAuthChange from './hoc/ListenAuthChange';
 import ListenToChats from './hoc/ListenToChats';
+import CircularProgress from '@mui/material/CircularProgress';
+import Veil from './Veil';
 
 const Home = lazy(() => import('./pages/Home'));
 const SignUp = lazy(() => import('./pages/SignUp'));
@@ -18,7 +20,7 @@ function App() {
     const roomId = location.pathname.match(/(?<=^\/p\/).+/g)?.[0];
     if (roomId && !prevRoomId) setPrevRoomId(roomId as string);
 
-    return () => { 
+    return () => {
       if (!prevRoomId) return;
       setPrevRoomId('');
       // callback can't be a promise, so IIFE
@@ -29,12 +31,32 @@ function App() {
   return (
     <ListenAuthChange>
       <ListenToChats>
-        <Suspense fallback={<p>loading ..</p>}>
+        <Suspense
+          fallback={
+            <div className='fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'>
+              <CircularProgress />
+            </div>
+          }
+        >
           <Routes>
-            <Route path='/p/:id' element={<NormalRoom />} />
+            <Route
+              path='/p/:id'
+              element={
+                <Veil>
+                  <NormalRoom />
+                </Veil>
+              }
+            />
             <Route path='signup' element={<SignUp />} />
             <Route path='signin' element={<SignIn />} />
-            <Route path='/' element={<Home />} />
+            <Route
+              path='/'
+              element={
+                <Veil>
+                  <Home />
+                </Veil>
+              }
+            />
           </Routes>
         </Suspense>
       </ListenToChats>

@@ -9,11 +9,9 @@ import {
   writeBatch,
   updateDoc,
   serverTimestamp,
-  arrayRemove,
   arrayUnion,
-  FieldValue,
 } from 'firebase/firestore';
-import { signOut as signOUT } from 'firebase/auth';
+import { deleteUser, signOut as signOUT, User } from 'firebase/auth';
 import { db, auth } from '../firebaseConfig';
 
 export interface updateProfileType {
@@ -40,8 +38,6 @@ export const updateUserDb = async (data: updateProfileType) => {
   if (!auth.currentUser) return;
   setDOC(doc(db, 'users', auth.currentUser.uid), data, { merge: true });
 };
-
-export const signOutUser = async () => signOUT(auth);
 
 export const searchUser = async (query: string) => {
   if (!auth.currentUser) return [];
@@ -106,6 +102,14 @@ export const deleteRoom = async (id: string) => {
   members.docs.forEach((member) => batch.delete(doc(db, 'rooms', id, 'members', member.id)));
   return batch.commit();
 };
+
+export const deleteUserAcc = async () => {
+  if (!auth.currentUser) return;
+  await deleteDoc(doc(db, 'users', auth.currentUser?.uid));
+  await deleteUser(auth.currentUser);
+};
+
+export const signOutUser = async () => signOUT(auth);
 
 export { default as useCreateUserWithEmailAndPassword } from '../custom-hooks/useCreateUserWithEmailAndPassword';
 export { default as useUpdateProfile } from '../custom-hooks/useUpdateProfile';
