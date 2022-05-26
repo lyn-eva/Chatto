@@ -58,7 +58,7 @@ const Conversation: React.FC<roomType> = ({ id, other, owner, updated }) => {
           <Badge
             badgeContent={notifications}
             color='primary'
-            sx={{ span: { transform: 'translate(0, 0)', position: 'static' } }}
+            sx={{ span: { transform: 'translate(0, 0)', position: 'static', zIndex: -10 } }}
           />
         </div>
       </div>

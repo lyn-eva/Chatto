@@ -12,6 +12,7 @@ interface userType {
   id: string;
   displayName: string;
   email: string;
+  photoURL: string;
 }
 
 const AddRoom = () => {
@@ -88,7 +89,14 @@ const AddRoom = () => {
       >
         {result ? (
           <div className='flex items-center text-[#374151] py-1 px-3 cursor-pointer'>
-            <Avatar>{result.displayName[0].toUpperCase()}</Avatar>
+            <Avatar className='bg-green-400 p-0'>
+              {result &&
+                (result.photoURL ? (
+                  <img className='scale-[1.2]' alt={result.displayName} src={result.photoURL}></img>
+                ) : (
+                  result.displayName?.[0].toUpperCase()
+                ))}
+            </Avatar>
             <h2 className='font-bold grow ml-3'>{result.displayName}</h2>
             {connections?.includes(result.id) ? (
               <p>
