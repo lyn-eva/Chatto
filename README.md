@@ -21,3 +21,6 @@
 * You can sign up with email and password must be at least six character long
 * I used both tailwindcss and mui for styling which is terrible (not recommend)
 * For emoji support, I used a portable react library called [emoji mart](https://github.com/missive/emoji-mart).
+
+### data structure
+![firestore data structure](./nitty-gritty.png)
