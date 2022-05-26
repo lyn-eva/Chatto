@@ -10,8 +10,10 @@ import {
   updateDoc,
   serverTimestamp,
   arrayUnion,
+  query,
+  where
 } from 'firebase/firestore';
-import { deleteUser, signOut as signOUT, User } from 'firebase/auth';
+import { deleteUser, signOut as signOUT } from 'firebase/auth';
 import { db, auth } from '../firebaseConfig';
 
 export interface updateProfileType {
@@ -39,11 +41,15 @@ export const updateUserDb = async (data: updateProfileType) => {
   setDOC(doc(db, 'users', auth.currentUser.uid), data, { merge: true });
 };
 
-export const searchUser = async (query: string) => {
+export const searchUser = async (key: string) => {
   if (!auth.currentUser) return [];
+  const isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(key);
+  const emailQuery = getDOCS(query(collection(db, 'users'), where('email', '==', key)));
+  const idQuery = getDoc(doc(db, 'users', key))
+
   return Promise.all([
-    getDoc(doc(db, 'users', query)),
-    getDoc(doc(db, 'users', auth.currentUser.uid)),
+    isEmail ? emailQuery : idQuery,
+    getDoc(doc(db, 'users', auth.currentUser.uid))
   ]);
 };
 

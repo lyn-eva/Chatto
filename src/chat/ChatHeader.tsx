@@ -2,11 +2,8 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { roomType } from '../features/roomSlice';
 import { selectAuth } from '../features/authSlice';
 import { selectRooms } from '../features/roomSlice';
-import { updateDoc, doc, arrayRemove } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
 import { deleteRoom, updateUserRooms } from '../firebaseUtils/firebaseUtils';
 import Avatar from '@mui/material/Avatar';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -16,6 +13,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { milliToHHMM } from '../datetime';
 import { useUserData } from '../custom-hooks/useUserData';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const ChatHeader: React.FC = () => {
   const { id } = useParams();
@@ -39,10 +37,20 @@ const ChatHeader: React.FC = () => {
 
   return (
     <header className='flex justify-between items-center px-4 py-2 bg-[#555] fixed top-0 w-full'>
-      <button>
-        <Avatar className='w-10 h-10 bg-green-400'> L</Avatar>
-      </button>
-      <div className='ml-5 grow text-white'>
+      <IconButton onClick={() => navigate('../')} className='text-white'>
+        <ArrowBackIcon />
+      </IconButton>
+      <IconButton>
+        <Avatar className='w-11 h-11 bg-green-400'>
+        {other &&
+          (other.photoURL ? (
+            <img className='w-full' alt={other.displayName} src={other.photoURL}></img>
+          ) : (
+            other.displayName?.[0].toUpperCase()
+          ))}
+      </Avatar>
+      </IconButton>
+      <div className='ml-2 grow text-white'>
         <h2 className='font-bold leading-4 mb-1'>{other?.displayName}</h2>
         <span className='text-sm tracking-wide text-gray-300 block min-h-[16.8px]'>
           {milliToHHMM(room?.updated?.seconds)}

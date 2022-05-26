@@ -19,7 +19,6 @@ interface metadata extends UserMetadata {
 const Profile: React.FC<Props> = ({ active }) => {
   const { updateProfile, loading } = useUpdateProfile();
   const [ModalActive, setModalActive] = useState<boolean>(false);
-
   const { user } = useSelector(selectAuth);
 
   const metadata = user?.metadata as metadata;
@@ -48,7 +47,7 @@ const Profile: React.FC<Props> = ({ active }) => {
           active
             ? 'opacity-100 translate-x-0'
             : 'opacity-0 pointer-events-none translate-x-[calc(100%+2rem)]'
-        } duration-500 absolute right-3 p-4 overflow-hidden rounded-[5px] top-[4.5rem] w-[min(90%,22rem)] bg-[#222] shadow-md text-white z-10`}
+        } duration-500 absolute right-3 py-4 px-7 overflow-hidden rounded-[5px] top-[4.5rem] w-[min(90%,22rem)] bg-[#222] shadow-md text-white z-10`}
       >
         <div className='flex-between'>
           <IconButton className='w-[40%] aspect-square'>
@@ -60,7 +59,7 @@ const Profile: React.FC<Props> = ({ active }) => {
               )}
             </Avatar>
           </IconButton>
-          <div className='mr-3 text-right'>
+          <div className='text-right'>
             <h1 className='mb-3'>
               <span className='text-gray-200'>displayName: </span>
               {user?.displayName}
@@ -71,6 +70,10 @@ const Profile: React.FC<Props> = ({ active }) => {
             </p>
           </div>
         </div>
+        <p className='mt-3 text-right'>
+          <span className='text-gray-200'>id: </span>
+          {user?.uid}
+        </p>
         <div className='my-6'>
           <div className='flex mb-3 gap-3 h-8'>
             <IconButton className='p-0'>

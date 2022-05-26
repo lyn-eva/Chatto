@@ -25,7 +25,18 @@ const AddRoom = () => {
     setActive((prev) => !prev);
     if (active || !inputRef.current) return;
     const [data, currentUserData] = await searchUser(inputRef.current.value);
-    setResult(data.exists() ? ({ id: data.id, ...data.data() } as userType) : undefined);
+
+    const res = (
+      'empty' in data
+        ? data?.empty
+          ? null
+          : { id: data.docs[0].id, ...data.docs[0].data() }
+        : data.exists()
+        ? { id: data.id, ...data.data() }
+        : null
+    ) as userType;
+
+    setResult(res);
     setConnections(currentUserData.data()?.connections);
   };
 
@@ -49,7 +60,7 @@ const AddRoom = () => {
       <Box sx={{ display: 'flex', width: '100%', gap: 2, py: 2, px: 1 }}>
         <input
           ref={inputRef}
-          placeholder='user id'
+          placeholder='email or user id'
           style={{ outline: 'none', borderRadius: 3, flexGrow: 1, paddingLeft: 14 }}
         />
         <Button onClick={handleSearch} variant='contained' className='bg-[#1976d2]'>
@@ -76,7 +87,7 @@ const AddRoom = () => {
         }}
       >
         {result ? (
-          <li className='flex items-center text-[#374151] py-1 px-3 cursor-pointer'>
+          <div className='flex items-center text-[#374151] py-1 px-3 cursor-pointer'>
             <Avatar>{result.displayName[0].toUpperCase()}</Avatar>
             <h2 className='font-bold grow ml-3'>{result.displayName}</h2>
             {connections?.includes(result.id) ? (
@@ -92,7 +103,7 @@ const AddRoom = () => {
                 Add
               </Button>
             )}
-          </li>
+          </div>
         ) : (
           <p style={{ padding: '0 4px', textAlign: 'center' }}>user not found :")</p>
         )}
