@@ -53,7 +53,7 @@ const Profile: React.FC<Props> = ({ active }) => {
           <IconButton className='w-[40%] aspect-square'>
             <Avatar className='w-full h-full bg-green-400 text-5xl p-0'>
               {user && user.photoURL ? (
-                <img className='w-full' alt='tme' src={user.photoURL}></img>
+                <img className='scale-[1.2]' alt='tme' src={user.photoURL}></img>
               ) : (
                 'l'
               )}

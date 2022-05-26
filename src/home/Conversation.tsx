@@ -39,7 +39,7 @@ const Conversation: React.FC<roomType> = ({ id, other, owner, updated }) => {
       <Avatar className='bg-green-400 p-0'>
         {OTHER &&
           (OTHER.photoURL ? (
-            <img className='w-full' alt={OTHER.displayName} src={OTHER.photoURL}></img>
+            <img className='scale-[1.2]' alt={OTHER.displayName} src={OTHER.photoURL}></img>
           ) : (
             OTHER.displayName?.[0].toUpperCase()
           ))}
