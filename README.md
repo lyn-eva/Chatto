@@ -1,5 +1,5 @@
 # Chat50
-### Video Demp:   <https://youtu.be/xKzwFLzrJw0>
+### Video Demp:   classified
 #### Description: a simple and severless one-to-one chat app with typescript and react
 
 ### tech stack
